@@ -1,14 +1,15 @@
 const form = document.querySelector('form');
-form.addEventListener('submit', (e) => {
-    const formData = new FormData(document.forms.form);
+const progress = document.getElementById('progress');
+
+form.addEventListener('submit', (el) => {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', 'https://students.netoservices.ru/nestjs-backend/upload');
-    xhr.upload.onprogress = function () {
-        let progress = document.getElementById('progress');
-        setInterval(() => {
-            progress.value += 0.1;
-        }, 500)
-    }
+    xhr.upload.onprogress = function (event) {
+        let total = event.total;
+        let loaded = event.loaded;
+        progress.value = loaded / total;
+    };
+    const formData = new FormData(form);
     xhr.send(formData);
-    e.preventDefault();
-})
+    el.preventDefault();
+});
